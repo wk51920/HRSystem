@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 指定Spring配置文件的Schema信息 -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+    <!-- 定义数据源Bean，使用C3P0数据源实现 -->
+    <!-- 并设置连接数据库的驱动、URL、用户名、密码，
+    连接池最大连接数、最小连接数、初始连接数等参数  -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+          destroy-method="close"
+          p:driverClass="com.mysql.jdbc.Driver"
+          p:jdbcUrl="jdbc:mysql://localhost:3306/hrSystem"
+          p:user="root"
+          p:password="root"
+          p:maxPoolSize="200"
+          p:minPoolSize="2"
+          p:initialPoolSize="2"
+          p:maxIdleTime="20"/>
+
+    <!-- 定义Hibernate的SessionFactory，并依赖注入数据源，注入上面定义的dataSource -->
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"
+          p:dataSource-ref="dataSource">
+        <!-- annotatedClasses属性用于列出全部持久化类 -->
+        <property name="annotatedClasses">
+            <list>
+                <!-- 以下用来列出Hibernate的持久化类 -->
+                <value>com.wk51920.hrsystem.domain.Application</value>
+                <value>com.wk51920.hrsystem.domain.Attend</value>
+                <value>com.wk51920.hrsystem.domain.AttendType</value>
+                <value>com.wk51920.hrsystem.domain.CheckBack</value>
+                <value>com.wk51920.hrsystem.domain.Employee</value>
+                <value>com.wk51920.hrsystem.domain.Manager</value>
+                <value>com.wk51920.hrsystem.domain.Payment</value>
+            </list>
+        </property>
+        <!-- 定义Hibernate的SessionFactory的属性 -->
+        <property name="hibernateProperties">
+            <!-- 指定数据库方言、是否自动建表、是否生成SQL语句等 	-->
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
+                <prop key="hibernate.cache.use_second_level_cache">true</prop>
+                <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
+                <prop key="hibernate.temp.use_jdbc_metadata_defaults">false</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!--定义模板-->
+    <bean id="daoTemplate" abstract="true" lazy-init="true"
+          p:sessionFactory-ref="sessionFactory"/>
+
+    <bean id="employeeDao"
+          class="com.wk51920.hrsystem.dao.impl.EmployeeDaoHibernate4"
+          parent="daoTemplate"/>
+
+    <bean id="managerDao"
+          class="com.wk51920.hrsystem.dao.impl.ManagerDaoHibernate4"
+          parent="daoTemplate"/>
+
+    <bean id="attendDao"
+          class="com.wk51920.hrsystem.dao.impl.AttendDaoHibernate4"
+          parent="daoTemplate"/>
+
+    <bean id="attendTypeDao"
+          class="com.wk51920.hrsystem.dao.impl.AttendTypeDaoHibernate4"
+          parent="daoTemplate"/>
+
+    <bean id="appDao"
+          class="com.wk51920.hrsystem.dao.impl.ApplicationDaoHibernate4"
+          parent="daoTemplate"/>
+
+    <bean id="checkDao"
+          class="com.wk51920.hrsystem.dao.impl.CheckBackDaoHibernate4"
+          parent="daoTemplate"/>
+
+    <bean id="payDao"
+          class="com.wk51920.hrsystem.dao.impl.PaymentDaoHibernate4"
+          parent="daoTemplate"/>
+
+</beans>
