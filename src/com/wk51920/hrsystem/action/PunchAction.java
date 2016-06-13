@@ -31,6 +31,7 @@ public class PunchAction extends EmpBaseAction {
         String dutyDay = sdf.format(new Date());
         // 调用业务逻辑方法处理用户请求
         int result = empManager.validPunch(user, dutyDay);
+        System.out.println(result);
         setPunchIsValid(result);
         return SUCCESS;
     }

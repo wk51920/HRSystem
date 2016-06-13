@@ -14,6 +14,8 @@ import java.util.List;
  * Created by wk51920 on 16/5/30.
  */
 public class AttendDaoHibernate4 extends BaseDaoHibernate4<Attend> implements AttendDao {
+
+
     @Override
     public List<Attend> findByEmpAndMonth(Employee emp, String month) {
         return find("from Attend as a where a.employee=?0 "+

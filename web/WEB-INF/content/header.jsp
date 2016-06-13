@@ -34,7 +34,7 @@
     <tr>
         <td height="12">
             <div align="center" class="title">
-                联系方式:
+                联系方式: wk_51920@126.com
                 <a href="mailto:wk_51920@126.com"></a>
             </div>
         </td>

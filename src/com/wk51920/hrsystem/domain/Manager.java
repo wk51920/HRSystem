@@ -24,11 +24,12 @@ public class Manager
     // 该经理管理的部门
     @Column(name="dept_name", length=50)
     private String dept;
+
     // 该经理对应的所有员工
     @OneToMany(targetEntity=Employee.class, mappedBy="manager")
     private Set<Employee> employees = new HashSet<Employee>();
-    // 该经理签署的所有批
 
+    // 该经理签署的所有批复
     @OneToMany(targetEntity=CheckBack.class , mappedBy="manager")
     private Set<CheckBack> checks = new HashSet<CheckBack>();
 
@@ -36,6 +37,7 @@ public class Manager
     public Manager()
     {
     }
+
     // 初始化全部成员变量的构造器
     public Manager(String dept , Set<Employee> employees
             , Set<CheckBack> checks)

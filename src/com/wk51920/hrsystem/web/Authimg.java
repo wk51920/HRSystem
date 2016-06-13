@@ -38,7 +38,6 @@ public class Authimg extends HttpServlet {
     }
 
     // 重写service方法,生成对客户端的响应
-
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // 设置禁止缓存
@@ -75,6 +74,7 @@ public class Authimg extends HttpServlet {
         }
         // 设置绘制字符的字体
         g.setFont(mFont);
+        // 核心
         // 用于保存系统生成的随机字符串
         String sRand = "";
         for (int i = 0; i < 6; i++) {

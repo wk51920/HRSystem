@@ -94,6 +94,7 @@
             <tx:method name="*"/>
         </tx:attributes>
     </tx:advice>
+
     <aop:config>
         <!-- 配置一个切入点，匹配empManager和mgrManager
             两个Bean的所有方法的执行 -->

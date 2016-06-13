@@ -12,6 +12,7 @@ import java.util.List;
  */
 // 桥接模式 出勤记录
 public interface AttendDao extends BaseDao<Attend> {
+
     // 根据员工 月份查询该员工的出勤记录 (某员工某月的所有出勤情况)
     List<Attend> findByEmpAndMonth(Employee emp, String month);
 

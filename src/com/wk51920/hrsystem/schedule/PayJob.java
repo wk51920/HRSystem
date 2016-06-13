@@ -23,7 +23,6 @@ public class PayJob extends QuartzJobBean {
         if (!isRunning) {
             System.out.println("开始调度自动结算工资");
             isRunning = true;
-
             // 调用业务逻辑方法
             empMgr.autoPay();
             isRunning = false;

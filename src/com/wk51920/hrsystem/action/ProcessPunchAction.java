@@ -4,6 +4,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.wk51920.hrsystem.service.EmpManager;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static com.wk51920.hrsystem.service.EmpManager.*;
@@ -13,10 +14,9 @@ import static com.wk51920.hrsystem.service.EmpManager.*;
  */
 public class ProcessPunchAction extends ActionSupport {
     // 该Action所依赖的业务逻辑组件
-    private EmpManager empMgr;
-
-    public void setEmpMgr(EmpManager empMgr) {
-        this.empMgr = empMgr;
+    private EmpManager empManager;
+    public void setEmpManager(EmpManager empMgr) {
+        this.empManager = empMgr;
     }
 
     // 处理上班打卡的方法
@@ -34,10 +34,11 @@ public class ProcessPunchAction extends ActionSupport {
         ActionContext ctx = ActionContext.getContext();
         String user = (String) ctx.getSession().get(WebConstant.USER);
         System.out.println("----打卡----" + user);
-        String dutyDay = new Date(System.currentTimeMillis()).toString();
-
+        SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd");
+        String dutyDay = sdf.format(new Date());
+        System.out.println("empMgr:!!!!!!!" + empManager);
         // 调用业务逻辑方法处理打卡请求
-        int result = empMgr.punch(user, dutyDay, isCome);
+        int result = empManager.punch(user, dutyDay, isCome);
         switch (result) {
             case PUNCH_FAIL:
                 addActionMessage("打卡失败");

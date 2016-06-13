@@ -7,7 +7,7 @@
 <struts>
     <!-- 配置了系列常量 -->
     <constant name="struts.custom.i18n.resources" value="resource"/>
-    <constant name="struts.i18n.encoding" value="GBK"/>
+    <constant name="struts.i18n.encoding" value="UTF-8"/>
     <constant name="struts.devMode" value="true"/>
     <package name="default" extends="struts-default">
         <interceptors>
@@ -45,8 +45,6 @@
             <exception-mapping
                     exception="com.wk51920.hrsystem.exception.HrException"
                     result="business"/>
-            <!-- 当Action中遇到Exception异常时，
-                系统将转入name为root的结果中 -->
 
         </global-exception-mappings>
 

@@ -1,6 +1,5 @@
 package com.wk51920.hrsystem.service.impl;
 
-import com.sun.corba.se.impl.orbutil.concurrent.SyncUtil;
 import com.wk51920.hrsystem.dao.*;
 import com.wk51920.hrsystem.domain.*;
 import com.wk51920.hrsystem.service.EmpManager;
@@ -70,8 +69,13 @@ public class EmpManagerImpl implements EmpManager {
     public void autoPunch() {
         System.out.println("自动插入旷工记录");
         List<Employee> emps = empDao.findAll(Employee.class);
+
+        // 少了这个日期格式化过程,出了大问题!
         // 获取当前时间
-        String dutyDay = new Date(System.currentTimeMillis()).toString();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        // 格式化当前时间
+        String dutyDay = sdf.format(new Date());
+
         for (Employee e : emps) {
             // 获取旷工对应的出勤类型
             AttendType atype = typeDao.get(AttendType.class, 6);
@@ -114,7 +118,6 @@ public class EmpManagerImpl implements EmpManager {
             for (Attend a : attends) {
                 amount += a.getType().getAmerce();
             }
-
             // 添加工资结算
             pay.setEmployee(e);
             pay.setAmount(amount);
@@ -127,6 +130,8 @@ public class EmpManagerImpl implements EmpManager {
     @Override
     public int validPunch(String user, String duytDay) {
         Employee emp = empDao.findByName(user);
+        System.out.println("duty Day:!!!!!!!!!!!!!!" + duytDay);
+        System.out.println(new Date(System.currentTimeMillis()).toString());
         if (emp == null)
             return NO_PUNCH;
         List<Attend> attends = attendDao.findByEmpAndDutyDay(emp, duytDay);
@@ -157,8 +162,12 @@ public class EmpManagerImpl implements EmpManager {
         if (emp == null)
             return PUNCH_FAIL;
 
+        System.out.println(dutyDay + " " + isCome);
+
+        System.out.println("newDutyDay  " + dutyDay);
         // 找到员工本次打卡对应的出勤记录
         Attend attend = attendDao.findByEmpAndDutyDayAndCome(emp, dutyDay, isCome);
+
         if (attend == null)
             return PUNCH_FAIL;
 
@@ -211,13 +220,13 @@ public class EmpManagerImpl implements EmpManager {
     @Override
     public List<AttendBean> unAttend(String empName) {
         // 找出正常上班
-        AttendType type = typeDao.get(AttendType.class,1);
+        AttendType type = typeDao.get(AttendType.class, 1);
         Employee emp = empDao.findByName(empName);
         // 找出非正常上班的出勤记录
-        List<Attend> attends = attendDao.findByEmpUnAttend(emp,type);
+        List<Attend> attends = attendDao.findByEmpUnAttend(emp, type);
         List<AttendBean> result = new ArrayList<AttendBean>();
         // 封装VO集合
-        for(Attend att: attends){
+        for (Attend att : attends) {
             result.add(new AttendBean(att.getId(), att.getDutyDay(), att.getType().getName(), att.getPunchTime()));
         }
 
@@ -233,9 +242,9 @@ public class EmpManagerImpl implements EmpManager {
     // 添加申请,用于申诉
     @Override
     public boolean addApplication(int attId, int typeId, String reason) {
-        System.out.println("-------------"+attId);
-        System.out.println("----"+typeId);
-        System.out.println("----"+reason);
+        System.out.println("-------------" + attId);
+        System.out.println("----" + typeId);
+        System.out.println("----" + reason);
         // 创建一个申请
         Application app = new Application();
         // 获取申请需要改变的出勤记录
@@ -243,7 +252,7 @@ public class EmpManagerImpl implements EmpManager {
         AttendType type = typeDao.get(AttendType.class, typeId);
         app.setAttend(attend);
         app.setType(type);
-        if(reason!=null)
+        if (reason != null)
             app.setReason(reason);
         System.out.println("====aaaaaaaa====");
         appDao.save(app);
